@@ -1,5 +1,5 @@
 var raptureUpgs = {
-	rows: 4,
+	rows: 5,
 	cols: 5,
 	11: {
 		unl() { return player.rapture.gte(1) },
@@ -30,7 +30,11 @@ var raptureUpgs = {
 		unl() { return player.rapture.gte(9) },
 		desc: "Spent Rapture Energy reduces the Rapture requirement.",
 		cost: new Decimal(2),
-		effect() { return player.spentRaptureEnergy.plus(1).log2().plus(1) },
+		effect() {
+			if (player.worldBoosts.upgrade.gte(3)) return player.spentRaptureEnergy.plus(1).log(1.35).plus(1) 
+		else return player.spentRaptureEnergy.plus(1).log2().plus(1) 
+			
+		},
 		effDesc(e) { return "÷"+format(e) },
 	},
 	15: {
@@ -44,7 +48,9 @@ var raptureUpgs = {
 		cost: new Decimal(3),
 		effect() { 
 			let eff = player.raptureEnergy.times(10).max(1);
+			if (player.raptureUpgs.includes(54))eff=player.spentRaptureEnergy.add(player.raptureEnergy).times(20).max(1)
 			if (player.raptureUpgs.includes(34)) eff = eff.pow(2.25);
+			if (player.worldBoosts.upgrade.gte(2)) eff = eff.pow(6);
 			return eff;
 		},
 		effDesc(e) { return formatWhole(e)+"x" },
@@ -53,7 +59,11 @@ var raptureUpgs = {
 		unl() { return player.rapture.gte(2) },
 		desc: "Raptures add to each Spirit Boost effect.",
 		cost: new Decimal(3),
-		effect() { return player.rapture.times(player.raptureUpgs.includes(25)?0.65:0.5) },
+		effect() { 
+			let eff = player.rapture.times(player.raptureUpgs.includes(25)?0.65:0.5);
+			if (player.worldBoosts.upgrade.gte(4)) eff = eff.times(Math.pow(new Decimal(1.3),(new Decimal(1).add(player.raptureTime).log(10).pow(0.5))));
+			return eff;
+		 },
 		effDesc(e) { return "+"+format(e) },
 	},
 	23: {
@@ -82,7 +92,9 @@ var raptureUpgs = {
 		unl() { return player.rapture.gte(5) },
 		desc: "Unspent Rapture Energy weakens the Spirit Boost cost formula.",
 		cost: new Decimal(5),
-		effect() { return Decimal.sub(1, Decimal.div(1, player.raptureEnergy.plus(1).log(4.5).plus(1).log2().plus(1))) },
+		effect() { 
+			if (player.raptureUpgs.includes(54)) return Decimal.sub(1, Decimal.div(1, player.spentRaptureEnergy.add(player.raptureEnergy).plus(1).log(2).plus(1).log2().plus(1)))
+			else return Decimal.sub(1, Decimal.div(1, player.raptureEnergy.plus(1).log(4.5).plus(1).log2().plus(1))) },
 		effDesc(e) { return format(e.times(100))+"%" },
 	},
 	33: {
@@ -137,6 +149,21 @@ var raptureUpgs = {
 			return Decimal.pow(2, b.pow(2));
 		},
 		effDesc(e) { return format(e)+"x" },
+	},
+	51: {
+		unl() { return player.worldBoosts.upgrade.gte(1) },
+		desc: "The fourth Spirit Boost effect is applied on every Spirit Boost",
+		cost: new Decimal(150),
+	},
+	54: {
+		unl() { return player.worldBoosts.upgrade.gte(5) },
+		desc: "The effect of Rapture Upgrade 21 and 32 is based on total Rapture energy and they are stronger.",
+		cost: new Decimal(180),
+	},
+	55: {
+		unl() { return player.worldBoosts.upgrade.gte(5)&& player.raptureUpgs.includes(54) },
+		desc: "Rapture reduction is brought to the 1.007th root.",
+		cost: new Decimal(80),
 	},
 }
 

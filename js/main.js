@@ -28,6 +28,7 @@ function getSpiritBoostRewards(n) {
 	let toDiv = data[1];
 	if (player.raptureUpgs.includes(31) && n==1) toDiv = 1;
 	else if (player.raptureUpgs.includes(43) && n==3) toDiv = 1;
+	else if (player.raptureUpgs.includes(51) && n==4) toDiv = 1;
 	return player.boosts.sub(data[0]).div(toDiv).plus(1).floor().max(0);
 }
 
@@ -151,6 +152,7 @@ function getSpiritRoot() {
 	if (player.raptureUpgs.includes(13) && tmp.ru) rt = rt.root(tmp.ru[13]);
 	if (player.raptureUpgs.includes(23) && tmp.ru) rt = rt.root(tmp.ru[23]);
 	if (player.raptureUpgs.includes(33)) rt = rt.root(1.05);
+	if (player.raptureUpgs.includes(55)) rt = rt.root(1.007);
 	if (player.raptureUpgs.includes(15)) rt = rt.root(1.03);
 	if (worldBoostActive("heaven", 3)) rt = rt.root(worldBoostEff("heaven", 3));
 	if (worldBoostActive("hell", 3)) rt = rt.root(worldBoostEff("hell", 3));

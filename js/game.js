@@ -91,5 +91,6 @@ function getNextFeatureDisplay() {
 	if (player.rapture.lt(1)) return "Unlock Rapture: Reach the Spirit limit.";
 	else if (player.rapture.lt(15)) return "Unlock Greater Worlds: Reach Rapture 15.";
 	else if (player.rapture.lt(25)) return "Unlock Arcana: Reach Rapture 25.";
+	else if (player.rapture.lt(30)) return "Unlock new Greater Worlds: Reach Rapture 30.";
 	else return "All Features Unlocked!";
 }

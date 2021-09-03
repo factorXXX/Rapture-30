@@ -122,14 +122,53 @@ const worlds = {
 			return disp;
 		},
 	},
+	upgrade: {
+		name: "upgrade",
+		cName: "Upgrade",
+		col: "#ffc000",
+		unl() { return player.rapture.gte(30); },
+		boosts: [
+			"Unlock new Rapture upgrades",
+			"The effect of Rapture upgrade 21 is raised to ^6",
+			"Rapture upgrade 14 effect formula is better.",
+			"Rapture upgrade 22 effect x1, and this increases over time",
+			"Unlock new Rapture upgrades",
+		],
+		boostCurrent: {	
+			3() { return Math.pow(new Decimal(1.3),(new Decimal(1).add(player.raptureTime).log(10).pow(0.5))) },
+		},
+
+		boostEffSuffix: {
+			3: "x",
+		},
+		buyBoost() {
+			if (player.worldBoosts[this.name].gte(this.boosts.length)) return;
+			if (tmp.wc.lt(1)) return;
+			player.worldsSpent = player.worldsSpent.plus(1);
+			player.worldBoosts[this.name] = player.worldBoosts[this.name].plus(1);
+		},
+		displayBoosts() {
+			let amt = player.worldBoosts[this.name];
+			let disp = "";
+			if (amt.gt(0)) for (let i=0;i<amt.min(this.boosts.length).toNumber();i++) {
+				disp += this.boosts[i]
+				if (this.boostCurrent[i]) disp += ":  "+format(tmp.wb[this.name][i])+this.boostEffSuffix[i]
+				disp += "<br><br>"
+			}
+			return disp;
+		},
+	},
 }
 
 function worldBoostActive(type, n) { return player.worldBoosts[type].gte(n) && worlds[type].unl() }
 function worldBoostEff(type, n) { return tmp.wb?tmp.wb[type][n-1]:new Decimal(1) }
 
 function respecWorldBoosts() {
-	if (!confirm("Are you sure you want to respec your World Boosts? This will force a Rapture reset!")) return;
+	if (!confirm("Are you sure you want to respec your World Boosts? This will force a Rapture reset and reset rapture upgrade!")) return;
 	player.worldsSpent = new Decimal(0);
+	player.raptureEnergy = player.raptureEnergy.plus(player.spentRaptureEnergy);
+	player.spentRaptureEnergy = new Decimal(0);
+	player.raptureUpgs = [];
 	for (let i=0;i<Object.keys(player.worldBoosts).length;i++) player.worldBoosts[Object.keys(player.worldBoosts)[i]] = new Decimal(0);
 	doRapture(true);
 }
