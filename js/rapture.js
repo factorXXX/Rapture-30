@@ -142,7 +142,7 @@ var raptureUpgs = {
 	},
 	45: {
 		unl() { return player.rapture.gte(15) && player.raptureUpgs.includes(35) },
-		desc: "Total World Boosts boost Spirit gain speed.",
+		desc: "First 3 World Boosts boost Spirit gain speed.",
 		cost: new Decimal(100),
 		effect() { 
 			let b = Decimal.add(player.worldBoosts.heaven||0, player.worldBoosts.hell||0).plus(player.worldBoosts.arcana||0);
