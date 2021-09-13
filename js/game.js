@@ -9,7 +9,7 @@ var tabUnlocks = {
 	Options() { return true },
 	Main() { return true },
 	Auto() { return worldBoostActive("hell", 2) },
-	Rapture() { return player.rapture.gte(1) || player.spirit.gte(tmp.sc) },
+	Rapture() { return player.rapture.gte(1) || player.spirit.gte(100) },
 	'Greater Worlds'() { return player.rapture.gte(15) },
 	Arcana() { return player.rapture.gte(25) },
 }
@@ -85,10 +85,10 @@ function gameLoop(diff) {
 	doAutoTick(diff);
 }
 
-function gainSpirit(diff) { return player.spirit = player.spirit.pow(tmp.sr).plus(tmp.sg.times(diff)).root(tmp.sr).min(tmp.sc); }
+function gainSpirit(diff) { return player.spirit = player.spirit.pow(tmp.sr).plus(tmp.sg.times(diff)).root(tmp.sr); }
 
 function getNextFeatureDisplay() {
-	if (player.rapture.lt(1)) return "Unlock Rapture: Reach the Spirit limit.";
+	if (player.rapture.lt(1)) return "Unlock Rapture: Reach 100 Spirits.";
 	else if (player.rapture.lt(15)) return "Unlock Greater Worlds: Reach Rapture 15.";
 	else if (player.rapture.lt(25)) return "Unlock Arcana: Reach Rapture 25.";
 	else return "All Features Unlocked!";

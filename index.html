@@ -39,7 +39,7 @@
 			</table>
 		</div>
 		<div v-if="tab=='Main'">
-			You have <span class="bigtxt spirit">{{format(player.spirit)}}</span> Spirit (limit of {{format(tmp.sc)}}).<br><br>
+			You have <span class="bigtxt spirit">{{format(player.spirit)}}</span> Spirit.<br><br>
 			You have <span class="spirit">{{formatWhole(player.boosts)}}</span> Spirit Boosts<br>
 			<button v-bind:class="{big: true, locked: player.spirit.lt(getSpiritBoostReq()), unlocked: player.spirit.gte(getSpiritBoostReq())}" onclick="buySpiritBoost()">{{getSpiritBoostDesc()}}<br><br>Cost: {{format(getSpiritBoostReq())}}</button><br><br>
 			<div v-for="(b,i) in spiritBoosts" v-if="tmp.sb[i+1].rewards.plus(tmp.esb[i+1]).gt(0)">{{getSpiritBoostEffDesc(i+1)}} <b>[{{formatWhole(tmp.sb[i+1].rewards)+(tmp.esb[i+1].gt(0)?("+"+format(tmp.esb[i+1])):"")}}]</b>: {{format(tmp.sb[i+1].eff)}}x</div>
@@ -49,6 +49,7 @@
 		</div>
 		<div v-if="tab=='Rapture'">
 			Rapture <span class="bigtxt rp">{{formatWhole(player.rapture)}}</span>, which is bringing Spirit to the <span class="bigtxt rp">{{format(tmp.sr)}}</span>th root<br><br>
+			Next rapture at <span class="bigtxt rp">{{formatWhole(tmp.sc)}}</span> split<br><br>
 			<button class="rapture unlocked" v-if="player.spirit.gte(tmp.sc)" onclick="doRapture()">Ascend to the next Rapture</button><br><br>
 			You have <span class="bigtxt rp">{{formatWhole(player.raptureEnergy)}}</span> Rapture Energy<br><br>
 			<button v-if="player.rapture.gt(0)" style="cursor:pointer;height:60px;" onclick="doRapture(true)">Force Rapture Reset</button>
